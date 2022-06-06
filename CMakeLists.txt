@@ -70,7 +70,7 @@ add_executable(dsl_tool
 target_link_libraries(
     dsl_tool
     chase
-    chase_backends
+    chase-backends
     antlr4-runtime)
 
 target_link_directories(
@@ -87,7 +87,7 @@ pybind11_add_module(
     )
 
 target_link_libraries(pychase_DSL PRIVATE
-    chase_backends
+    chase-backends
     antlr4-runtime
     chase)
 
