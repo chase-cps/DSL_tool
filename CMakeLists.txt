@@ -60,7 +60,7 @@ install(TARGETS chase_DSL
     DESTINATION chase/lib
     )
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
     DESTINATION chase/include/frontends
     )
 
