@@ -106,4 +106,8 @@ install(TARGETS pychase_DSL
     EXPORT pychaseTargets
     DESTINATION chase/lib)
 
-
+add_custom_target(install_DSL_tool
+        "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target install
+        DEPENDS ${dsl_tool}
+        DEPENDS ${pychase_DSL}
+        COMMENT "Installing the DSL Tool")
