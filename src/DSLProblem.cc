@@ -96,7 +96,7 @@ Contract * Problem::_generateContract()
 
 void Problem::_createArchitecture() {
     unsigned int nodes = components.size();
-    _architecture = new Graph(nodes, false, new Name("architecture"));
+    _architecture = new Graph(nodes, true, new Name("architecture"));
 
 
 
@@ -127,6 +127,10 @@ void Problem::_createArchitecture() {
         Edge *edge = new Edge(source_id, target_id);
 
         _architecture->addEdge(edge);
+        if( ! current->isDirected() ){
+            auto inverse = new Edge(target_id, source_id);
+            _architecture->addEdge(inverse);
+        }
     }
 
     // Create the edges.
@@ -153,6 +157,14 @@ void Problem::_createArchitecture() {
 
         _architecture->addEdge(edge_1);
         _architecture->addEdge(edge_2);
+
+        if( ! current->isDirected() ){
+            auto inverse_1 = new Edge(target_id, sw_id);
+            _architecture->addEdge(inverse_1);
+            auto inverse_2 = new Edge(sw_id, source_id);
+            _architecture->addEdge(inverse_2);
+        }
+
     }
 
     // add the graph to the contract.

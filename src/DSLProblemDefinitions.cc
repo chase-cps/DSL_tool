@@ -11,9 +11,10 @@
 
 using namespace DSLFrontend;
 
-Connection::Connection(Component *source, Component *target) :
+Connection::Connection(Component *source, Component *target, bool directed) :
     _source(source),
-    _target(target)
+    _target(target),
+    _directed(directed)
 {
     _checkConsistency();
 }
@@ -37,9 +38,10 @@ Component *Connection::getTarget() const {
 SwitchedConnection::SwitchedConnection(
         Component *source,
         Component *target,
+        bool directed,
         DomainSpecificType *switchType,
         Component * sw):
-    Connection(source, target),
+    Connection(source, target, directed),
     _switchType(switchType),
     _switch(sw)
 {
@@ -91,6 +93,11 @@ void Connection::_checkConsistency() {
                 std::string("Incompatible flows: ") + source_flow + " -> "
                 + target_flow
                 );
+}
+
+bool Connection::isDirected()
+{
+    return _directed;
 }
 
 

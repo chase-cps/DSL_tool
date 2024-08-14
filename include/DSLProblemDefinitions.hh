@@ -138,7 +138,9 @@ namespace DSLFrontend {
     class Connection {
     public:
         /// @brief Constructor.
-        Connection(Component *source, Component *target);
+        Connection(Component *source,
+                   Component *target,
+                   bool directed);
 
         /// @brief Destructor.
         ~Connection() = default;
@@ -150,6 +152,10 @@ namespace DSLFrontend {
         /// @brief Function returning a pointer to the target node.
         /// @param Pointer to the target node.
         Component *getTarget() const;
+
+        /// @brief Function returning if the connection is directed.
+        /// @return True if the connection is directed, false otherwise.
+        bool isDirected();
 
         /// @brief Function returning the target node name.
         /// @param The target node name.
@@ -164,6 +170,8 @@ namespace DSLFrontend {
         Component *_source;
         /// @brief Pointer to the target node.
         Component *_target;
+        /// @brief Variable that specifies if the connection is directed.
+        bool _directed;
 
         /// @brief The method checks the consistency of the connection.
         /// Throws an error if not consistent.
@@ -183,6 +191,7 @@ namespace DSLFrontend {
         SwitchedConnection(
                 Component *source,
                 Component *target,
+                bool directed,
                 DomainSpecificType *switchType,
                 Component *sw = nullptr );
 

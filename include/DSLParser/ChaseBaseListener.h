@@ -1,5 +1,5 @@
 
-// Generated from Chase.g4 by ANTLR 4.8
+// Generated from Chase.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -48,6 +48,12 @@ public:
 
   virtual void enterUnswitched(ChaseParser::UnswitchedContext * /*ctx*/) override { }
   virtual void exitUnswitched(ChaseParser::UnswitchedContext * /*ctx*/) override { }
+
+  virtual void enterUndirected_conn(ChaseParser::Undirected_connContext * /*ctx*/) override { }
+  virtual void exitUndirected_conn(ChaseParser::Undirected_connContext * /*ctx*/) override { }
+
+  virtual void enterDirected_conn(ChaseParser::Directed_connContext * /*ctx*/) override { }
+  virtual void exitDirected_conn(ChaseParser::Directed_connContext * /*ctx*/) override { }
 
   virtual void enterConn(ChaseParser::ConnContext * /*ctx*/) override { }
   virtual void exitConn(ChaseParser::ConnContext * /*ctx*/) override { }

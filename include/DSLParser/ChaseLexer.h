@@ -1,5 +1,5 @@
 
-// Generated from Chase.g4 by ANTLR 4.8
+// Generated from Chase.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -14,10 +14,11 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
-    T__14 = 15, WS = 16, ENDST = 17, ID = 18, NUMBER = 19, LINE_COMMENT = 20
+    T__14 = 15, T__15 = 16, T__16 = 17, WS = 18, ENDST = 19, ID = 20, NUMBER = 21, 
+    LINE_COMMENT = 22
   };
 
-  ChaseLexer(antlr4::CharStream *input);
+  explicit ChaseLexer(antlr4::CharStream *input);
   ~ChaseLexer();
 
   virtual std::string getGrammarFileName() const override;

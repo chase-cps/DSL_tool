@@ -45,7 +45,10 @@ switched:  switchedKW '(' sw=name ')';
 
 unswitched: unswitchedKW;
 
-conn: from=name ('--' | '-' '(' sw=name ')' '-') to=name ENDST;
+undirected_conn: from=name ('--' | '-' '(' sw=name ')' '-' ) to=name ENDST;
+directed_conn: from=name ('->' | '-' '(' sw=name ')' '>' ) to=name ENDST;
+
+conn: directed_conn | undirected_conn;
 
 requirements: requirementsKW req+;
 

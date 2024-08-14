@@ -1,5 +1,5 @@
 
-// Generated from Chase.g4 by ANTLR 4.8
+// Generated from Chase.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -14,20 +14,22 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
-    T__14 = 15, WS = 16, ENDST = 17, ID = 18, NUMBER = 19, LINE_COMMENT = 20
+    T__14 = 15, T__15 = 16, T__16 = 17, WS = 18, ENDST = 19, ID = 20, NUMBER = 21, 
+    LINE_COMMENT = 22
   };
 
   enum {
     RuleChaseSpec = 0, RuleTypes = 1, RuleType = 2, RuleComponents = 3, 
     RuleComponent = 4, RuleName = 5, RuleAbbreviations = 6, RuleAbbrev = 7, 
-    RuleConnections = 8, RuleSwitched = 9, RuleUnswitched = 10, RuleConn = 11, 
-    RuleRequirements = 12, RuleReq = 13, RuleParam = 14, RuleAssumptions = 15, 
-    RuleAssum = 16, RuleTypesKW = 17, RuleComponentsKW = 18, RuleAbbreviationsKW = 19, 
-    RuleRequirementsKW = 20, RuleConnectionsKW = 21, RuleAssumptionsKW = 22, 
-    RuleSwitchedKW = 23, RuleUnswitchedKW = 24
+    RuleConnections = 8, RuleSwitched = 9, RuleUnswitched = 10, RuleUndirected_conn = 11, 
+    RuleDirected_conn = 12, RuleConn = 13, RuleRequirements = 14, RuleReq = 15, 
+    RuleParam = 16, RuleAssumptions = 17, RuleAssum = 18, RuleTypesKW = 19, 
+    RuleComponentsKW = 20, RuleAbbreviationsKW = 21, RuleRequirementsKW = 22, 
+    RuleConnectionsKW = 23, RuleAssumptionsKW = 24, RuleSwitchedKW = 25, 
+    RuleUnswitchedKW = 26
   };
 
-  ChaseParser(antlr4::TokenStream *input);
+  explicit ChaseParser(antlr4::TokenStream *input);
   ~ChaseParser();
 
   virtual std::string getGrammarFileName() const override;
@@ -48,6 +50,8 @@ public:
   class ConnectionsContext;
   class SwitchedContext;
   class UnswitchedContext;
+  class Undirected_connContext;
+  class Directed_connContext;
   class ConnContext;
   class RequirementsContext;
   class ReqContext;
@@ -246,16 +250,48 @@ public:
 
   UnswitchedContext* unswitched();
 
-  class  ConnContext : public antlr4::ParserRuleContext {
+  class  Undirected_connContext : public antlr4::ParserRuleContext {
   public:
     ChaseParser::NameContext *from = nullptr;
     ChaseParser::NameContext *sw = nullptr;
     ChaseParser::NameContext *to = nullptr;
-    ConnContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Undirected_connContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ENDST();
     std::vector<NameContext *> name();
     NameContext* name(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  Undirected_connContext* undirected_conn();
+
+  class  Directed_connContext : public antlr4::ParserRuleContext {
+  public:
+    ChaseParser::NameContext *from = nullptr;
+    ChaseParser::NameContext *sw = nullptr;
+    ChaseParser::NameContext *to = nullptr;
+    Directed_connContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ENDST();
+    std::vector<NameContext *> name();
+    NameContext* name(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  Directed_connContext* directed_conn();
+
+  class  ConnContext : public antlr4::ParserRuleContext {
+  public:
+    ConnContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Directed_connContext *directed_conn();
+    Undirected_connContext *undirected_conn();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

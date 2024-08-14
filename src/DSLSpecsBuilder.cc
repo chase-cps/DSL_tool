@@ -216,74 +216,168 @@ void DSLSpecsBuilder::enterConn(ChaseParser::ConnContext * context ) {
 
 void DSLSpecsBuilder::_enterSwitchedConn(ChaseParser::ConnContext *ctx)
 {
-    std::string from = _getNameFromContext(ctx->from);
-    std::string to = _getNameFromContext(ctx->to);
+    if(ctx->undirected_conn() != nullptr) {
+        auto conn = ctx->undirected_conn();
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
 
-    Component * component_from = _getComponent(from);
-    Component * component_to = _getComponent(to);
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
 
-    if(component_from == nullptr)
-        messageError("Component does not exist: " + from);
-    if(component_to == nullptr)
-        messageError("Component does not exist: " + to);
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
 
-    auto connection = new SwitchedConnection(
-            component_from, component_to, _currentSwitchType );
+        auto connection = new SwitchedConnection(
+                component_from,
+                component_to, false,
+                _currentSwitchType);
 
-    _problem->switched_connections.insert(connection);
+        _problem->switched_connections.insert(connection);
+    }
+    else if(ctx->directed_conn() != nullptr) {
+        auto conn = ctx->directed_conn();
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
+
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
+
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
+
+        auto connection = new SwitchedConnection(
+                component_from,
+                component_to, true,
+                _currentSwitchType);
+
+        _problem->switched_connections.insert(connection);
+    } else {
+        messageError("Wrong connection format.");
+    }
 }
 
 void DSLSpecsBuilder::_enterUnswitchedConn(ChaseParser::ConnContext *ctx)
 {
-    std::string from = _getNameFromContext(ctx->from);
-    std::string to = _getNameFromContext(ctx->to);
+    if(ctx->undirected_conn() != nullptr) {
+        auto conn = ctx->undirected_conn();
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
 
-    Component * component_from = _getComponent(from);
-    Component * component_to = _getComponent(to);
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
 
-    if(component_from == nullptr)
-        messageError("Component does not exist: " + from);
-    if(component_to == nullptr)
-        messageError("Component does not exist: " + to);
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
 
-    auto connection = new Connection(component_from, component_to);
+        auto connection = new Connection(component_from,
+                                         component_to,
+                                         false);
 
-    _problem->unswitched_connections.insert(connection);
+        _problem->unswitched_connections.insert(connection);
+    }
+    else if(ctx->directed_conn() != nullptr) {
+        auto conn = ctx->directed_conn();
+
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
+
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
+
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
+
+        auto connection = new Connection(component_from,
+                                         component_to,
+                                         true);
+
+        _problem->unswitched_connections.insert(connection);
+    } else {
+        messageError("Wrong connection format.");
+    }
 }
 
 void DSLSpecsBuilder::_enterSpecificConn(ChaseParser::ConnContext *ctx)
 {
-    std::string from = _getNameFromContext(ctx->from);
-    std::string to = _getNameFromContext(ctx->to);
-    std::string sw = _getNameFromContext(ctx->sw);
+    if(ctx->undirected_conn() != nullptr) {
+        auto conn = ctx->undirected_conn();
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
+        std::string sw = _getNameFromContext(conn->sw);
 
-    Component * component_from = _getComponent(from);
-    Component * component_to = _getComponent(to);
-    Component * component_sw = _getComponent(sw);
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
+        Component *component_sw = _getComponent(sw);
 
-    if(component_from == nullptr)
-        messageError("Component does not exist: " + from);
-    if(component_to == nullptr)
-        messageError("Component does not exist: " + to);
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
 
-    if(component_sw == nullptr)
-    {
-        size_t pos = sw.find(' ');
-        std::string t = sw.substr(0, pos);
-        std::map< std::string, DomainSpecificType * >::iterator it;
-        it = _problem->domain_specific_types.find(t);
+        if (component_sw == nullptr) {
+            size_t pos = sw.find(' ');
+            std::string t = sw.substr(0, pos);
+            std::map<std::string, DomainSpecificType *>::iterator it;
+            it = _problem->domain_specific_types.find(t);
 
-        // Create a component with the given name, and the found type.
-        component_sw = new Component(sw, (*it).second);
+            // Create a component with the given name, and the found type.
+            component_sw = new Component(sw, (*it).second);
+        }
+
+        auto connection = new SwitchedConnection(
+                component_from, component_to, false, component_sw->type, component_sw);
+
+        _problem->switched_connections.insert(connection);
+        _problem->components.insert(
+                std::pair<std::string, Component *>(
+                        component_sw->name, component_sw));
     }
+    else if(ctx->directed_conn() != nullptr)
+    {
+        auto conn = ctx->directed_conn();
+        std::string from = _getNameFromContext(conn->from);
+        std::string to = _getNameFromContext(conn->to);
+        std::string sw = _getNameFromContext(conn->sw);
 
-    auto connection = new SwitchedConnection(
-            component_from, component_to, component_sw->type, component_sw );
+        Component *component_from = _getComponent(from);
+        Component *component_to = _getComponent(to);
+        Component *component_sw = _getComponent(sw);
 
-    _problem->switched_connections.insert(connection);
-    _problem->components.insert(
-            std::pair< std::string, Component * >(
-                    component_sw->name, component_sw));
+        if (component_from == nullptr)
+            messageError("Component does not exist: " + from);
+        if (component_to == nullptr)
+            messageError("Component does not exist: " + to);
+
+        if (component_sw == nullptr) {
+            size_t pos = sw.find(' ');
+            std::string t = sw.substr(0, pos);
+            std::map<std::string, DomainSpecificType *>::iterator it;
+            it = _problem->domain_specific_types.find(t);
+
+            // Create a component with the given name, and the found type.
+            component_sw = new Component(sw, (*it).second);
+        }
+
+        auto connection = new SwitchedConnection(
+                component_from, component_to, true, component_sw->type, component_sw);
+
+        _problem->switched_connections.insert(connection);
+        _problem->components.insert(
+                std::pair<std::string, Component *>(
+                        component_sw->name, component_sw));
+    }
+    else
+    {
+        messageError("Wrong connection format.");
+    }
 }
 
 void DSLSpecsBuilder::enterRequirements(ChaseParser::RequirementsContext * ) {
