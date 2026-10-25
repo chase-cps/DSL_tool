@@ -87,7 +87,7 @@ int main( int argc, char * argv[] )
 void printHelp()
 {
     std::cerr << "[USAGE]\n" <<
-        "patternsToNetworks -i input_file [-o output_file] [-b backend] [-V]"
+        "dsl_tool -i input_file [-o output_file] [-b backend] [-V]"
         << std::endl <<
         std::endl <<
         "\t-i : specifies the txt input file containing the specifications."
