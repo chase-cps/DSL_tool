@@ -8,6 +8,7 @@
 
 #include <unistd.h>
 #include <fstream>
+#include <stdexcept>
 
 #include "DSLSpecsBuilder.hh"
 #include "backends/GR1CPrinter.hh"
@@ -47,39 +48,44 @@ void printHelp();
 
 int main( int argc, char * argv[] )
 {
-    Params * parameters = parseCmdLine(argc, argv);
+    // messageError throws after printing the error: exit with an error code.
+    try {
+        Params * parameters = parseCmdLine(argc, argv);
 
-    if(parameters == nullptr) return -1;
+        if(parameters == nullptr) return -1;
 
-    // Start parsing the input file.
-    DSLSpecsBuilder builder;
-    builder.parseSpecificationFile(parameters->fileIn);
-    Contract * c = builder.getProblem()->getContract();
+        // Start parsing the input file.
+        DSLSpecsBuilder builder;
+        builder.parseSpecificationFile(parameters->fileIn);
+        Contract * c = builder.getProblem()->getContract();
 
-    if( parameters->verbose == true )
-        std::cout << c->getString() << std::endl << std::endl;
+        if( parameters->verbose == true )
+            std::cout << c->getString() << std::endl << std::endl;
 
-    if( parameters->backend == "gr1c" )
-    {
-        std::string fileOut = parameters->fileOut;
-        if (fileOut.find(".spc") == std::string::npos)
-            fileOut += ".spc";
-        GR1CPrinter printer;
-        printer.print(c, fileOut);
-        messageInfo("GR1C specification written in " + fileOut);
+        if( parameters->backend == "gr1c" )
+        {
+            std::string fileOut = parameters->fileOut;
+            if (fileOut.find(".spc") == std::string::npos)
+                fileOut += ".spc";
+            GR1CPrinter printer;
+            printer.print(c, fileOut);
+            messageInfo("GR1C specification written in " + fileOut);
+        }
+        else if( parameters->backend == "slugs" )
+        {
+            std::string fileOut = parameters->fileOut;
+            if (parameters->fileOut.find("structuredSlugs") == std::string::npos)
+                fileOut += ".structuredSlugs";
+            SlugsPrinter printer;
+            printer.print(c, fileOut);
+            messageInfo("SLUGS specification written in " + fileOut);
+        }
+
+        delete(c);
+        return 0;
+    } catch (const std::exception &) {
+        return -1;
     }
-    else if( parameters->backend == "slugs" )
-    {
-        std::string fileOut = parameters->fileOut;
-        if (parameters->fileOut.find("structuredSlugs") == std::string::npos)
-            fileOut += ".structuredSlugs";
-        SlugsPrinter printer;
-        printer.print(c, fileOut);
-        messageInfo("SLUGS specification written in " + fileOut);
-    }
-
-    delete(c);
-    return 0;
 }
 
 
