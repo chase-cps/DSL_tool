@@ -360,7 +360,7 @@ Problem::_compute_precision(std::vector<chase_time *> * timings) {
                 b = c;
             } while( c!= 0 );
             x = GCD;
-            y = values[i + 1];
+            if( i + 1 < values.size() ) y = values[i + 1];
         }
     }
 
