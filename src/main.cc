@@ -81,7 +81,8 @@ int main( int argc, char * argv[] )
             messageInfo("SLUGS specification written in " + fileOut);
         }
 
-        delete(c);
+        // The contract is not freed: the program ends here, and the
+        // formulas built by the patterns share some of their parts.
         return 0;
     } catch (const std::exception &) {
         return -1;
